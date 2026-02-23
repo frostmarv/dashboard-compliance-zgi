@@ -1,4 +1,4 @@
-// ✅ SHEETS.JS - ZINUS GLOBAL (FULL COMPATIBLE WITH CODE.GS)
+// ✅ SHEETS.JS - ZINUS GLOBAL (FULL COMPATIBLE + STRICT FACTORY FILTER)
 (function() {
   'use strict';
 
@@ -9,13 +9,15 @@
   // ⚠️ PENTING: Ganti URL ini dengan URL Web App Anda
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqTbqQY6C-AwxvZO7HeAXpIqeNMtA2CiO3X4z-OeRi_iFhYrW82kwQ8efmQFCVPmw22w/exec'; 
 
+  // Fungsi Deteksi Factory berdasarkan URL Browser
   const detectFactory = function() { 
     const path = window.location.pathname.toLowerCase();
-    if (path.includes('/bogor/')) {
-      return 'bogor';
-    } else if (path.includes('/karawang/')) {
+    if (path.includes('/karawang/')) {
       return 'karawang';
+    } else if (path.includes('/bogor/')) {
+      return 'bogor';
     } else {
+      // Fallback default jika URL tidak jelas
       console.warn('⚠️ Factory not detected in URL path. Defaulting to "bogor".');
       return 'bogor';
     }
@@ -25,14 +27,14 @@
   console.log(`🏭 [SYSTEM] Current Factory: ${CURRENT_FACTORY.toUpperCase()}`);
 
   // ==========================================
-  // 2. CORE FUNCTIONS (MATCH CODE.GS ACTIONS)
+  // 2. CORE FUNCTIONS (FETCH DATA)
   // ==========================================
 
-  // Fetch All Employees from Database (Master List)
-  // Code.gs: action=getAllEmployees&factory=bogor
+  // Fetch All Employees (Master List)
   const fetchAllEmployees = async function() {
     try {
-      console.log(`📊 [${CURRENT_FACTORY}] Fetching all employees...`);
+      console.log(`📊 [${CURRENT_FACTORY}] Fetching employees for ${CURRENT_FACTORY}...`);
+      // Mengirim parameter factory ke backend
       const url = `${SCRIPT_URL}?action=getAllEmployees&factory=${CURRENT_FACTORY}`;
       
       const res = await fetch(url, { 
@@ -44,9 +46,11 @@
       
       const data = await res.json();
       
+      // Validasi: Pastikan data array
       if (!Array.isArray(data)) {
         console.warn('⚠️ Response is not an array, checking structure...', data);
         if (data.error) throw new Error(data.error);
+        return [];
       }
       
       console.log(`📊 [${CURRENT_FACTORY}] Employees fetched: ${data.length} rows`);
@@ -57,11 +61,11 @@
     }
   };
 
-  // Fetch All Responses from Responses Sheet
-  // Code.gs: action=getAllResponses&factory=bogor
+  // Fetch All Responses (Data yang sudah diisi)
   const fetchAllResponses = async function() {
     try {
-      console.log(`📊 [${CURRENT_FACTORY}] Fetching all responses...`);
+      console.log(`📊 [${CURRENT_FACTORY}] Fetching responses for ${CURRENT_FACTORY}...`);
+      // Mengirim parameter factory ke backend
       const url = `${SCRIPT_URL}?action=getAllResponses&factory=${CURRENT_FACTORY}`;
       
       const res = await fetch(url, { 
@@ -76,6 +80,7 @@
       if (!Array.isArray(data)) {
         console.warn('⚠️ Response is not an array, checking structure...', data);
         if (data.error) throw new Error(data.error);
+        return [];
       }
       
       console.log(`📊 [${CURRENT_FACTORY}] Responses fetched: ${data.length} rows`);
@@ -86,107 +91,74 @@
     }
   };
 
-  // Get Form Status (Lock/Unlock)
-  // Code.gs: action=getFormStatus
+  // Get Form Status
   const getFormStatus = async function() {
     try {
-      console.log(`🔒 [${CURRENT_FACTORY}] Checking form status...`);
       const url = `${SCRIPT_URL}?action=getFormStatus`;
-      
-      const res = await fetch(url, { 
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
-      
+      const res = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      
-      const data = await res.json();
-      console.log(`🔒 Form Status:`, data);
-      return data;
+      return await res.json();
     } catch (error) {
-      console.error(`❌ [${CURRENT_FACTORY}] Error in getFormStatus:`, error);
+      console.error(`❌ Error in getFormStatus:`, error);
       throw error;
     }
   };
 
-  // Get Employee by NIK (For Login/Validation)
-  // Code.gs: action=getEmployee&nik=12345
+  // Get Employee by NIK
   const getEmployeeByNik = async function(nik) {
     try {
-      console.log(`🔍 [${CURRENT_FACTORY}] Looking up employee: ${nik}...`);
       const url = `${SCRIPT_URL}?action=getEmployee&nik=${encodeURIComponent(nik)}`;
-      
-      const res = await fetch(url, { 
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
-      
+      const res = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      
-      const data = await res.json();
-      console.log(`🔍 Employee lookup result:`, data);
-      return data;
+      return await res.json();
     } catch (error) {
-      console.error(`❌ [${CURRENT_FACTORY}] Error in getEmployeeByNik:`, error);
+      console.error(`❌ Error in getEmployeeByNik:`, error);
       throw error;
     }
   };
 
   // Get Questions
-  // Code.gs: action=getQuestions
   const getQuestions = async function() {
     try {
-      console.log(`📝 [${CURRENT_FACTORY}] Fetching questions...`);
       const url = `${SCRIPT_URL}?action=getQuestions`;
-      
-      const res = await fetch(url, { 
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
-      
+      const res = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      
-      const data = await res.json();
-      console.log(`📝 Questions fetched: ${data.length} items`);
-      return data;
+      return await res.json();
     } catch (error) {
-      console.error(`❌ [${CURRENT_FACTORY}] Error in getQuestions:`, error);
+      console.error(`❌ Error in getQuestions:`, error);
       throw error;
     }
   };
 
   // Submit Evaluation
-  // Code.gs: doPost with action implied by endpoint
   const submitEvaluation = async function(formData) {
     try {
       console.log(`📤 [${CURRENT_FACTORY}] Submitting evaluation...`);
-      
       const res = await fetch(SCRIPT_URL, { 
         method: 'POST',
         body: formData
       });
-      
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      
-      const data = await res.json();
-      console.log(`📤 Submit result:`, data);
-      return data;
+      return await res.json();
     } catch (error) {
-      console.error(`❌ [${CURRENT_FACTORY}] Error in submitEvaluation:`, error);
+      console.error(`❌ Error in submitEvaluation:`, error);
       throw error;
     }
   };
 
   // ==========================================
-  // 3. DATA PROCESSING HELPERS (DREAM LOGIC)
+  // 3. DATA PROCESSING (STRICT FACTORY LOGIC)
   // ==========================================
 
-  // Get All Unique Departments from Database
+  // Get All Unique Departments (Hanya untuk factory ini)
   const getAllDepartments = async function() {
     const employees = await fetchAllEmployees();
     const deptSet = new Set();
     
     employees.forEach(emp => {
+      // Pastikan factory cocok (defensive)
+      if (emp.factory && emp.factory.toLowerCase() !== CURRENT_FACTORY) return;
+      
       if (emp.departemen) {
         deptSet.add(emp.departemen);
       }
@@ -195,23 +167,34 @@
     return Array.from(deptSet).sort();
   };
 
-  // Get Department Summary (Total Employees per Department from Database)
-  // LOGIKA DREAM: Membandingkan Master List vs Responses
+  // Get Department Summary (Total vs Done vs Pending)
+  // LOGIKA: Filter Master List & Response berdasarkan Factory saat ini
   const getDepartmentSummary = async function() {
-    const employees = await fetchAllEmployees();
-    const responses = await fetchAllResponses();
+    const allEmployees = await fetchAllEmployees();
+    const allResponses = await fetchAllResponses();
     
-    // Map responses by NIK untuk lookup cepat
+    // 1. FILTER EMPLOYEES: Hanya ambil karyawan factory ini
+    const factoryEmployees = allEmployees.filter(emp => {
+      // Cek kolom factory jika ada, atau asumsikan data sudah difilter server
+      // Jika data dari server sudah bersih, filter ini hanya safety belt
+      if (emp.factory) {
+        return emp.factory.toLowerCase() === CURRENT_FACTORY;
+      }
+      return true; 
+    });
+
+    // 2. MAP RESPONSES: Buat lookup cepat berdasarkan NIK
     const responseMap = {};
-    responses.forEach(r => {
+    allResponses.forEach(r => {
       responseMap[r.nik] = r;
     });
     
-    // Group by department
+    // 3. GROUP BY DEPARTMENT
     const deptMap = {};
     
-    employees.forEach(emp => {
+    factoryEmployees.forEach(emp => {
       const dept = emp.departemen || 'Unknown Dept';
+      
       if (!deptMap[dept]) {
         deptMap[dept] = {
           departemen: dept,
@@ -223,7 +206,7 @@
       
       deptMap[dept].total++;
       
-      // Cek apakah NIK ini ada di responseMap
+      // Cek apakah NIK ini sudah ada di responseMap
       if (responseMap[emp.nik]) {
         deptMap[dept].done++;
       } else {
@@ -234,24 +217,31 @@
     return Object.values(deptMap).sort((a, b) => a.departemen.localeCompare(b.departemen));
   };
 
-  // Get Completion Status for Specific Department
+  // Get Completion Status Detail (List Nama per Dept)
   const getDepartmentDetail = async function(deptFilter) {
-    const employees = await fetchAllEmployees();
-    const responses = await fetchAllResponses();
+    const allEmployees = await fetchAllEmployees();
+    const allResponses = await fetchAllResponses();
     
-    // Map responses by NIK
+    // 1. FILTER EMPLOYEES: Hanya factory ini
+    let filteredEmployees = allEmployees.filter(emp => {
+      if (emp.factory) {
+        return emp.factory.toLowerCase() === CURRENT_FACTORY;
+      }
+      return true;
+    });
+
+    // 2. FILTER BY DEPARTMENT (Jika ada pilihan dept)
+    if (deptFilter) {
+      filteredEmployees = filteredEmployees.filter(emp => emp.departemen === deptFilter);
+    }
+    
+    // 3. MAP RESPONSES
     const responseMap = {};
-    responses.forEach(r => {
+    allResponses.forEach(r => {
       responseMap[r.nik] = r;
     });
     
-    // Filter by department if specified
-    let filteredEmployees = employees;
-    if (deptFilter) {
-      filteredEmployees = employees.filter(emp => emp.departemen === deptFilter);
-    }
-    
-    // Merge data with status
+    // 4. MERGE DATA
     const status = filteredEmployees.map(emp => {
       const response = responseMap[emp.nik];
       return {
@@ -269,12 +259,12 @@
     return status;
   };
 
-  // Get Completion Status (All Employees)
+  // Get Completion Status (All Employees in this Factory)
   const getCompletionStatus = async function() {
     return await getDepartmentDetail(null);
   };
 
-  // Get Summary Stats
+  // Get Summary Stats Helper
   const getSummaryStats = function(statusData) {
     const total = statusData.length;
     const done = statusData.filter(d => d.status === 'done').length;
@@ -284,7 +274,7 @@
     return { total, done, pending, percent };
   };
 
-  // Find Duplicate Names (Untuk Deteksi Double Input di Dashboard)
+  // Find Duplicate Names
   const findDuplicateNames = function(data) {
     const count = {};
     const normalized = data.map(d => {
@@ -295,7 +285,7 @@
     return normalized.filter(d => count[d._key] > 1);
   };
 
-  // Find Duplicate NIK (Lebih Akurat untuk Deteksi Double Input)
+  // Find Duplicate NIK
   const findDuplicateNik = function(data) {
     const count = {};
     const normalized = data.map(d => {
@@ -307,7 +297,7 @@
   };
 
   // ==========================================
-  // 4. EXPORT FUNCTIONS (DREAM STYLE)
+  // 4. EXPORT FUNCTIONS
   // ==========================================
 
   const exportToCSV = function(filename, rows) {
@@ -335,7 +325,7 @@
     console.log(`💾 [EXPORT] Downloaded ${filename}`);
   };
 
-  // Export Department Detail (Semua Karyawan di Dept tsb)
+  // Export Department Detail
   const exportDepartemenDetail = async function(dept) {
     try {
       const status = await getDepartmentDetail(dept);
@@ -351,7 +341,7 @@
     }
   };
 
-  // Export Pending List (Hanya yang belum isi)
+  // Export Pending List
   const exportPendingList = async function(dept) {
     try {
       const status = await getDepartmentDetail(dept);
@@ -375,7 +365,7 @@
     }
   };
 
-  // Export Done List (Yang sudah isi)
+  // Export Done List
   const exportDoneList = async function(dept) {
     try {
       const status = await getDepartmentDetail(dept);
@@ -399,13 +389,13 @@
     }
   };
 
-  // Export Double Input (Potential Duplicates found in Sheet)
+  // Export Double Input
   const exportDoubleInput = async function() {
     try {
+      // Ambil semua response (sudah difilter factory oleh fetchAllResponses)
       const data = await fetchAllResponses();
       const doubles = findDuplicateNik(data);
       
-      // Hapus properti internal _key
       const clean = doubles.map(({ _key, ...rest }) => rest);
       
       const dateStr = new Date().toISOString().split('T')[0];
@@ -424,7 +414,7 @@
     }
   };
 
-  // Export All Responses (Raw Data)
+  // Export All Responses
   const exportAllResponses = async function() {
     try {
       const data = await fetchAllResponses();
@@ -449,7 +439,6 @@
   // 5. EXPORT TO WINDOW (PUBLIC API)
   // ==========================================
   
-  // Core Fetch Functions
   window.fetchAllEmployees = fetchAllEmployees;
   window.fetchAllResponses = fetchAllResponses;
   window.getFormStatus = getFormStatus;
@@ -457,7 +446,6 @@
   window.getQuestions = getQuestions;
   window.submitEvaluation = submitEvaluation;
   
-  // Data Processing Functions
   window.getAllDepartments = getAllDepartments;
   window.getDepartmentSummary = getDepartmentSummary;
   window.getDepartmentDetail = getDepartmentDetail;
@@ -466,7 +454,6 @@
   window.findDuplicateNames = findDuplicateNames;
   window.findDuplicateNik = findDuplicateNik;
   
-  // Export Functions
   window.exportToCSV = exportToCSV;
   window.exportDepartemenDetail = exportDepartemenDetail;
   window.exportPendingList = exportPendingList;
@@ -474,18 +461,14 @@
   window.exportDoubleInput = exportDoubleInput;
   window.exportAllResponses = exportAllResponses;
   
-  // Info Helpers
   window.getCurrentFactory = function() { return CURRENT_FACTORY; };
   window.getScriptUrl = function() { return SCRIPT_URL; };
 
   // ==========================================
   // 6. INITIALIZATION LOG
   // ==========================================
-  console.log('%c✅ sheets.js LOADED (Zinus Global - Full Version)', 'color: green; font-weight: bold; background: #e9fbf0; padding: 5px;');
+  console.log('%c✅ sheets.js LOADED (Zinus Global - Strict Factory Filter)', 'color: green; font-weight: bold; background: #e9fbf0; padding: 5px;');
   console.log(`🏭 Active Factory: ${CURRENT_FACTORY.toUpperCase()}`);
   console.log(`🔗 Target Script: ${SCRIPT_URL}`);
-  console.log(`📦 Available Functions:`, Object.keys(window).filter(k => 
-    k.startsWith('fetch') || k.startsWith('get') || k.startsWith('export')
-  ).join(', '));
 
 })();

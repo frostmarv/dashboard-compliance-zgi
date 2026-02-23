@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Evaluasi 1 - Dashboard</title>
+  <title>Evaluasi 1 - Dashboard Bogor</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
@@ -420,17 +420,17 @@
 
   <!-- HEADER -->
   <header class="page-header">
-    <!-- ✅ PATH ABSOLUTE -->
-    <img src="/assets/images/zinus-putih.webp" alt="Logo Zinus" class="h-8" onerror="this.style.display='none'" />
-    <h1>Evaluasi 1 — Rekap Departemen</h1>
+    <!-- ✅ PATH RELATIF (PENTING) -->
+    <img src="../assets/images/zinus-putih.webp" alt="Logo Zinus" class="h-8" onerror="this.style.display='none'" />
+    <h1>Evaluasi 1 — Dashboard BOGOR</h1>
   </header>
 
   <!-- MAIN -->
   <main class="flex-1 p-4">
     <div class="max-w-7xl mx-auto w-full">
       <!-- TOMBOL KEMBALI -->
-      <!-- ✅ PATH ABSOLUTE -->
-      <a href="/index.html" class="btn-back-between" aria-label="Kembali ke Beranda">
+      <!-- ✅ PATH RELATIF (PENTING) -->
+      <a href="../index.html" class="btn-back-between" aria-label="Kembali ke Beranda">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
@@ -440,7 +440,7 @@
       <!-- CARD -->
       <div class="card mt-4">
         <div class="slide-header">
-          Monitoring Input Evaluasi
+          Monitoring Input Evaluasi (BOGOR)
         </div>
         <div class="table-container">
           <table>
@@ -457,7 +457,7 @@
               <tr>
                 <td colspan="5" class="loading">
                   <div class="loading-spinner"></div>
-                  <div>Memuat data...</div>
+                  <div>Memuat data Bogor...</div>
                 </td>
               </tr>
             </tbody>
@@ -472,20 +472,20 @@
     <div class="footer-time" id="clock"></div>
     <div class="footer-brand">
       <div class="footer-brand-item">
-        <!-- ✅ PATH ABSOLUTE -->
-        <img src="/assets/images/zinus-putih.webp" class="h-10" alt="Zinus Logo" onerror="this.style.display='none'" />
+        <!-- ✅ PATH RELATIF (PENTING) -->
+        <img src="../assets/images/zinus-putih.webp" class="h-10" alt="Zinus Logo" onerror="this.style.display='none'" />
         <span>Zinus Global Indonesia</span>
       </div>
-      <!-- ✅ PATH ABSOLUTE -->
-        <img src="/assets/images/hyundai-ori-hitam.png" class="h-10" alt="Hyundai Logo" onerror="this.style.display='none'" />
+      <!-- ✅ PATH RELATIF (PENTING) -->
+      <img src="../assets/images/hyundai-ori-hitam.png" class="h-10" alt="Hyundai Logo" onerror="this.style.display='none'" />
     </div>
   </footer>
 
   <!-- SCRIPT -->
-  <!-- ✅ PATH ABSOLUTE - INI YANG PENTING -->
-  <script src="/assets/js/sheets.js"></script>
+  <!-- ✅ PATH RELATIF KE JS UTAMA (PENTING) -->
+  <script src="../assets/js/sheets.js"></script>
   <script>
-    console.log('📊 Starting evaluasi1.html script (Global Version - 5 Columns)...');
+    console.log('📊 Starting evaluasi1.html script (BOGOR VERSION)...');
     
     function waitForSheets(timeout = 5000) {
       return new Promise((resolve, reject) => {
@@ -504,7 +504,14 @@
 
     waitForSheets(5000)
       .then(() => {
+        // Konfirmasi Factory
         const factory = window.getCurrentFactory();
+        
+        // Validasi: Pastikan kita benar-benar di Bogor
+        if (factory !== 'bogor') {
+          console.warn(`⚠️ Warning: Detected factory is ${factory}, but this page is for Bogor.`);
+        }
+
         console.log(`🏭 Detected Factory: ${factory.toUpperCase()}`);
         console.log(`📡 Fetching summary for ${factory.toUpperCase()}...`);
         
@@ -520,7 +527,7 @@
             <tr>
               <td colspan="5" style="text-align: center; padding: 2.5rem; color: #6b7280;">
                 <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Tidak Ada Data</div>
-                <div style="font-size: 14px; color: #6b7280;">Belum ada data karyawan di database</div>
+                <div style="font-size: 14px; color: #6b7280;">Belum ada data karyawan di database Bogor</div>
               </td>
             </tr>
           `;
@@ -535,6 +542,7 @@
             <td style="text-align:center; font-weight:bold;" class="text-done">${item.done}</td>
             <td style="text-align:center; font-weight:bold;" class="text-pending">${item.pending}</td>
             <td style="text-align:center;">
+              <!-- ✅ Link ke detail evaluasi (relative path) -->
               <a href="detail-evaluasi1.html?dept=${encodeURIComponent(item.departemen)}" class="badge-detail">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
