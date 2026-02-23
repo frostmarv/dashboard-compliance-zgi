@@ -147,7 +147,6 @@
       border-bottom: 2px solid #329f96;
     }
 
-    /* Center alignment for number columns */
     thead th:nth-child(2),
     thead th:nth-child(3),
     thead th:nth-child(4),
@@ -179,7 +178,6 @@
       color: #1a1a1a;
     }
 
-    /* Center alignment for number columns */
     tbody td:nth-child(2),
     tbody td:nth-child(3),
     tbody td:nth-child(4),
@@ -187,7 +185,6 @@
       text-align: center;
     }
 
-    /* Color for Done/Pending numbers */
     .text-done { color: #059669; }
     .text-pending { color: #dc2626; }
 
@@ -337,7 +334,7 @@
       }
 
       table {
-        min-width: 600px; /* Wider for 5 columns */
+        min-width: 600px;
       }
 
       thead th {
@@ -423,7 +420,8 @@
 
   <!-- HEADER -->
   <header class="page-header">
-    <img src="assets/images/zinus-putih.webp" alt="Logo Zinus" class="h-8" onerror="this.style.display='none'" />
+    <!-- ✅ PATH ABSOLUTE -->
+    <img src="/assets/images/zinus-putih.webp" alt="Logo Zinus" class="h-8" onerror="this.style.display='none'" />
     <h1>Evaluasi 1 — Rekap Departemen</h1>
   </header>
 
@@ -431,7 +429,8 @@
   <main class="flex-1 p-4">
     <div class="max-w-7xl mx-auto w-full">
       <!-- TOMBOL KEMBALI -->
-      <a href="index.html" class="btn-back-between" aria-label="Kembali ke Beranda">
+      <!-- ✅ PATH ABSOLUTE -->
+      <a href="/index.html" class="btn-back-between" aria-label="Kembali ke Beranda">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
@@ -446,7 +445,6 @@
         <div class="table-container">
           <table>
             <thead>
-              <!-- 5 KOLOM SESUAI REQUEST -->
               <tr>
                 <th>Departemen</th>
                 <th>Total Karyawan</th>
@@ -474,24 +472,25 @@
     <div class="footer-time" id="clock"></div>
     <div class="footer-brand">
       <div class="footer-brand-item">
-        <img src="assets/images/zinus-putih.webp" class="h-10" alt="Zinus Logo" onerror="this.style.display='none'" />
+        <!-- ✅ PATH ABSOLUTE -->
+        <img src="/assets/images/zinus-putih.webp" class="h-10" alt="Zinus Logo" onerror="this.style.display='none'" />
         <span>Zinus Global Indonesia</span>
       </div>
-      <img src="assets/images/hyundai-ori-hitam.png" class="h-10" alt="Hyundai Logo" onerror="this.style.display='none'" />
+      <!-- ✅ PATH ABSOLUTE -->
+        <img src="/assets/images/hyundai-ori-hitam.png" class="h-10" alt="Hyundai Logo" onerror="this.style.display='none'" />
     </div>
   </footer>
 
   <!-- SCRIPT -->
-  <script src="..assets/js/sheets.js"></script>
+  <!-- ✅ PATH ABSOLUTE - INI YANG PENTING -->
+  <script src="/assets/js/sheets.js"></script>
   <script>
     console.log('📊 Starting evaluasi1.html script (Global Version - 5 Columns)...');
     
-    // Wait for sheets.js functions to be available
     function waitForSheets(timeout = 5000) {
       return new Promise((resolve, reject) => {
         const start = Date.now();
         const iv = setInterval(() => {
-          // Cek fungsi dari sheets.js versi Global (Dream Logic)
           if (typeof window.getDepartmentSummary === 'function') {
             clearInterval(iv);
             resolve();
@@ -509,11 +508,6 @@
         console.log(`🏭 Detected Factory: ${factory.toUpperCase()}`);
         console.log(`📡 Fetching summary for ${factory.toUpperCase()}...`);
         
-        // Menggunakan fungsi getDepartmentSummary() dari sheets.js
-        // Fungsi ini otomatis:
-        // 1. Mengambil Master Data Karyawan (filter by factory)
-        // 2. Mengambil Responses (filter by factory -> Responses 1 atau 2)
-        // 3. Menghitung Total, Done, Pending per Departemen
         return window.getDepartmentSummary();
       })
       .then(summary => {
@@ -535,14 +529,6 @@
 
         summary.forEach(item => {
           const row = document.createElement('tr');
-          
-          // Render 5 Kolom:
-          // 1. Departemen
-          // 2. Total (item.total)
-          // 3. Sudah (item.done) - Warna Hijau
-          // 4. Belum (item.pending) - Warna Merah
-          // 5. Aksi (Tombol)
-          
           row.innerHTML = `
             <td>${escapeHtml(item.departemen)}</td>
             <td style="text-align:center; font-weight:bold;">${item.total} orang</td>
@@ -579,7 +565,6 @@
       return div.innerHTML;
     }
 
-    // CLOCK
     function updateClock() {
       const now = new Date();
       const dateStr = now.toLocaleDateString("id-ID", {
