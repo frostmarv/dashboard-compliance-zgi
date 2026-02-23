@@ -47,7 +47,7 @@
     }
 
     /* ===============================
-       TOMBOL KEMBALI - SEJAJAR DENGAN CARD
+       TOMBOL KEMBALI
        =============================== */
     .btn-back-between {
       background-color: white;
@@ -81,7 +81,7 @@
     }
 
     /* ===============================
-       CARD / CONTAINER - PUTIH
+       CARD / CONTAINER
        =============================== */
     .card {
       background-color: white;
@@ -94,9 +94,6 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
-    /* ===============================
-       SLIDE HEADER - HIJAU TOSKA
-       =============================== */
     .slide-header {
       background-color: #329f96;
       color: white;
@@ -104,8 +101,6 @@
       font-weight: bold;
       font-size: 18px;
       text-align: center;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
       flex-shrink: 0;
       display: flex;
       justify-content: center;
@@ -187,7 +182,7 @@
     }
 
     /* ===============================
-       BADGE DETAIL - HIJAU TOSKA
+       BADGE DETAIL
        =============================== */
     .badge-detail {
       display: inline-flex;
@@ -220,7 +215,7 @@
     }
 
     /* ===============================
-       FOOTER - HIJAU TOSKA
+       FOOTER
        =============================== */
     .footer {
       background-color: #329f96;
@@ -291,7 +286,7 @@
     }
 
     /* ===============================
-       RESPONSIVE - MOBILE OPTIMIZED
+       RESPONSIVE
        =============================== */
     @media (max-width: 768px) {
       .page-header {
@@ -418,7 +413,7 @@
 
   <!-- HEADER -->
   <header class="page-header">
-    <img src="/assets/images/zinus-putih.webp" alt="Logo Zinus" class="h-8" onerror="this.style.display='none'" />
+    <img src="assets/images/zinus-putih.webp" alt="Logo Zinus" class="h-8" onerror="this.style.display='none'" />
     <h1>Evaluasi 1 — Rekap Departemen</h1>
   </header>
 
@@ -426,7 +421,7 @@
   <main class="flex-1 p-4">
     <div class="max-w-7xl mx-auto w-full">
       <!-- TOMBOL KEMBALI -->
-      <a href="../" class="btn-back-between" aria-label="Kembali ke Beranda">
+      <a href="index.html" class="btn-back-between" aria-label="Kembali ke Beranda">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
@@ -441,6 +436,7 @@
         <div class="table-container">
           <table>
             <thead>
+              <!-- HEADER KOLOM DIUBAH MENGIKUTI ZINUS DREAM (3 KOLOM) -->
               <tr>
                 <th>Departemen</th>
                 <th>Jumlah</th>
@@ -466,25 +462,26 @@
     <div class="footer-time" id="clock"></div>
     <div class="footer-brand">
       <div class="footer-brand-item">
-        <img src="/assets/images/zinus-putih.webp" class="h-10" alt="Zinus Logo" onerror="this.style.display='none'" />
+        <img src="assets/images/zinus-putih.webp" class="h-10" alt="Zinus Logo" onerror="this.style.display='none'" />
         <span>Zinus Global Indonesia</span>
       </div>
-      <img src="/assets/images/hyundai-ori-hitam.png" class="h-10" alt="Hyundai Logo" onerror="this.style.display='none'" />
+      <img src="assets/images/hyundai-ori-hitam.png" class="h-10" alt="Hyundai Logo" onerror="this.style.display='none'" />
     </div>
   </footer>
 
   <!-- SCRIPT -->
-  <script src="/assets/js/sheets.js"></script>
+  <script src="assets/js/sheets.js"></script>
   <script>
-    console.log('📊 Starting evaluasi1.html script...');
+    console.log('📊 Starting evaluasi1.html script (Global Version)...');
     
     // Wait for sheets.js functions to be available
     function waitForSheets(timeout = 5000) {
       return new Promise((resolve, reject) => {
         const start = Date.now();
         const iv = setInterval(() => {
+          // Cek fungsi dari sheets.js versi Global (Dream Logic)
           if (typeof window.getDepartmentSummary === 'function' && 
-              typeof window.fetchSheet === 'function') {
+              typeof window.fetchAllEmployees === 'function') {
             clearInterval(iv);
             resolve();
           } else if (Date.now() - start > timeout) {
@@ -500,11 +497,12 @@
         const factory = window.getCurrentFactory();
         console.log(`🏭 Detected Factory: ${factory.toUpperCase()}`);
         
-        return window.fetchSheet("evaluasi1");
+        // Menggunakan fungsi getDepartmentSummary() yang sudah diupdate di sheets.js
+        // Fungsi ini sekarang otomatis membandingkan Master Data vs Responses
+        return window.getDepartmentSummary();
       })
-      .then(data => {
-        console.log('📊 Data fetched:', data.length, 'rows');
-        const summary = window.getDepartmentSummary(data);
+      .then(summary => {
+        console.log('📊 Department summary:', summary.length, 'departments');
         const table = document.getElementById("table");
         table.innerHTML = '';
 
@@ -513,7 +511,7 @@
             <tr>
               <td colspan="3" style="text-align: center; padding: 2.5rem; color: #6b7280;">
                 <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Tidak Ada Data</div>
-                <div style="font-size: 14px; color: #6b7280;">Belum ada data evaluasi yang tersedia</div>
+                <div style="font-size: 14px; color: #6b7280;">Belum ada data karyawan di database</div>
               </td>
             </tr>
           `;
@@ -522,9 +520,15 @@
 
         summary.forEach(item => {
           const row = document.createElement('tr');
+          
+          // Logika Tampilan: Mengikuti Zinus Dream (3 Kolom)
+          // Kolom 1: Departemen
+          // Kolom 2: Jumlah (Total Karyawan di Dept tersebut)
+          // Kolom 3: Tombol Aksi
+          
           row.innerHTML = `
             <td>${escapeHtml(item.departemen)}</td>
-            <td style="text-align:center; font-weight:bold;">${item.jumlah} orang</td>
+            <td style="text-align:center; font-weight:bold;">${item.total} orang</td>
             <td style="text-align:center;">
               <a href="detail-evaluasi1.html?dept=${encodeURIComponent(item.departemen)}" class="badge-detail">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -544,7 +548,7 @@
           <tr>
             <td colspan="3" style="text-align: center; padding: 2.5rem; color: #dc2626;">
               <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Gagal Memuat Data</div>
-              <div style="font-size: 14px; color: #6b7280;">Silakan coba lagi nanti atau hubungi administrator</div>
+              <div style="font-size: 14px; color: #6b7280;">${error.message}</div>
             </td>
           </tr>
         `;
