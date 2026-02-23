@@ -147,8 +147,11 @@
       border-bottom: 2px solid #329f96;
     }
 
+    /* Center alignment for number columns */
     thead th:nth-child(2),
-    thead th:nth-child(3) {
+    thead th:nth-child(3),
+    thead th:nth-child(4),
+    thead th:nth-child(5) {
       text-align: center;
     }
 
@@ -176,10 +179,17 @@
       color: #1a1a1a;
     }
 
+    /* Center alignment for number columns */
     tbody td:nth-child(2),
-    tbody td:nth-child(3) {
+    tbody td:nth-child(3),
+    tbody td:nth-child(4),
+    tbody td:nth-child(5) {
       text-align: center;
     }
+
+    /* Color for Done/Pending numbers */
+    .text-done { color: #059669; }
+    .text-pending { color: #dc2626; }
 
     /* ===============================
        BADGE DETAIL
@@ -327,7 +337,7 @@
       }
 
       table {
-        min-width: 480px;
+        min-width: 600px; /* Wider for 5 columns */
       }
 
       thead th {
@@ -384,7 +394,7 @@
       }
 
       table {
-        min-width: 400px;
+        min-width: 550px;
       }
 
       thead th,
@@ -436,16 +446,18 @@
         <div class="table-container">
           <table>
             <thead>
-              <!-- HEADER KOLOM DIUBAH MENGIKUTI ZINUS DREAM (3 KOLOM) -->
+              <!-- 5 KOLOM SESUAI REQUEST -->
               <tr>
                 <th>Departemen</th>
-                <th>Jumlah</th>
-                <th>Status</th>
+                <th>Total Karyawan</th>
+                <th>Sudah (✓)</th>
+                <th>Belum (✗)</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody id="table">
               <tr>
-                <td colspan="3" class="loading">
+                <td colspan="5" class="loading">
                   <div class="loading-spinner"></div>
                   <div>Memuat data...</div>
                 </td>
@@ -472,7 +484,7 @@
   <!-- SCRIPT -->
   <script src="assets/js/sheets.js"></script>
   <script>
-    console.log('📊 Starting evaluasi1.html script (Global Version)...');
+    console.log('📊 Starting evaluasi1.html script (Global Version - 5 Columns)...');
     
     // Wait for sheets.js functions to be available
     function waitForSheets(timeout = 5000) {
@@ -480,8 +492,7 @@
         const start = Date.now();
         const iv = setInterval(() => {
           // Cek fungsi dari sheets.js versi Global (Dream Logic)
-          if (typeof window.getDepartmentSummary === 'function' && 
-              typeof window.fetchAllEmployees === 'function') {
+          if (typeof window.getDepartmentSummary === 'function') {
             clearInterval(iv);
             resolve();
           } else if (Date.now() - start > timeout) {
@@ -496,9 +507,13 @@
       .then(() => {
         const factory = window.getCurrentFactory();
         console.log(`🏭 Detected Factory: ${factory.toUpperCase()}`);
+        console.log(`📡 Fetching summary for ${factory.toUpperCase()}...`);
         
-        // Menggunakan fungsi getDepartmentSummary() yang sudah diupdate di sheets.js
-        // Fungsi ini sekarang otomatis membandingkan Master Data vs Responses
+        // Menggunakan fungsi getDepartmentSummary() dari sheets.js
+        // Fungsi ini otomatis:
+        // 1. Mengambil Master Data Karyawan (filter by factory)
+        // 2. Mengambil Responses (filter by factory -> Responses 1 atau 2)
+        // 3. Menghitung Total, Done, Pending per Departemen
         return window.getDepartmentSummary();
       })
       .then(summary => {
@@ -509,7 +524,7 @@
         if (summary.length === 0) {
           table.innerHTML = `
             <tr>
-              <td colspan="3" style="text-align: center; padding: 2.5rem; color: #6b7280;">
+              <td colspan="5" style="text-align: center; padding: 2.5rem; color: #6b7280;">
                 <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Tidak Ada Data</div>
                 <div style="font-size: 14px; color: #6b7280;">Belum ada data karyawan di database</div>
               </td>
@@ -521,14 +536,18 @@
         summary.forEach(item => {
           const row = document.createElement('tr');
           
-          // Logika Tampilan: Mengikuti Zinus Dream (3 Kolom)
-          // Kolom 1: Departemen
-          // Kolom 2: Jumlah (Total Karyawan di Dept tersebut)
-          // Kolom 3: Tombol Aksi
+          // Render 5 Kolom:
+          // 1. Departemen
+          // 2. Total (item.total)
+          // 3. Sudah (item.done) - Warna Hijau
+          // 4. Belum (item.pending) - Warna Merah
+          // 5. Aksi (Tombol)
           
           row.innerHTML = `
             <td>${escapeHtml(item.departemen)}</td>
             <td style="text-align:center; font-weight:bold;">${item.total} orang</td>
+            <td style="text-align:center; font-weight:bold;" class="text-done">${item.done}</td>
+            <td style="text-align:center; font-weight:bold;" class="text-pending">${item.pending}</td>
             <td style="text-align:center;">
               <a href="detail-evaluasi1.html?dept=${encodeURIComponent(item.departemen)}" class="badge-detail">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -546,7 +565,7 @@
         console.error('Error loading data:', error);
         document.getElementById("table").innerHTML = `
           <tr>
-            <td colspan="3" style="text-align: center; padding: 2.5rem; color: #dc2626;">
+            <td colspan="5" style="text-align: center; padding: 2.5rem; color: #dc2626;">
               <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Gagal Memuat Data</div>
               <div style="font-size: 14px; color: #6b7280;">${error.message}</div>
             </td>
