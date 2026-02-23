@@ -1,9 +1,6 @@
 {
-  "CleanUrls": true,
+  "cleanUrls": true,
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/evaluasi-dashboard/$1"
-    }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
