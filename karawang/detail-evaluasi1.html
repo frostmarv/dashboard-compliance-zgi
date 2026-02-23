@@ -40,23 +40,6 @@
       font-weight: bold;
       margin: 0;
       letter-spacing: 0.5px;
-      flex: 1;
-    }
-
-    /* ===============================
-       FACTORY BADGE - HIJAU TOSKA
-       =============================== */
-    .factory-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background-color: #329f96;
-      color: white;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-weight: bold;
-      font-size: 14px;
-      margin-left: 12px;
     }
 
     /* ===============================
@@ -146,8 +129,6 @@
       overflow-x: auto;
       overflow-y: auto;
       max-height: calc(100vh - 300px);
-      
-      /* Sembunyikan scrollbar */
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
@@ -200,14 +181,33 @@
 
     tbody td:first-child {
       text-align: left;
-      font-weight: 600;
-      color: #4b5563;
-    }
-
-    tbody td:not(:first-child) {
-      text-align: left;
       font-weight: 700;
       color: #1a1a1a;
+    }
+
+    /* ===============================
+       STATUS BADGES
+       =============================== */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .status-done {
+      background-color: #d1fae5;
+      color: #059669;
+      border: 1px solid #059669;
+    }
+
+    .status-pending {
+      background-color: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #dc2626;
     }
 
     /* ===============================
@@ -369,17 +369,16 @@
 
 <body class="min-h-screen flex flex-col">
 
-  <!-- HEADER - HIJAU TOSKA -->
+  <!-- HEADER -->
   <header class="page-header">
-    <img src="/assets/images/zinus-putih.webp" alt="Logo Zinus" class="h-8" />
-    <h1 id="title">
-      Detail Evaluasi Training 1
-      <span class="factory-badge">🏭 Karawang</span>
-    </h1>
+    <!-- ✅ PATH RELATIF (PENTING) -->
+    <img src="../assets/images/zinus-putih.webp" alt="Logo Zinus" class="h-8" onerror="this.style.display='none'" />
+    <h1 id="title">Detail Evaluasi Training 1 - KARAWANG</h1>
   </header>
 
-  <!-- BUTTONS - KEMBALI & EXPORT -->
+  <!-- BUTTONS -->
   <div class="buttons-container">
+    <!-- ✅ PATH RELATIF (PENTING) -->
     <a href="evaluasi1.html" class="btn btn-back">
       Kembali
     </a>
@@ -398,7 +397,7 @@
           <input
             type="text"
             id="searchInput"
-            placeholder="Cari nama..."
+            placeholder="Cari nama, NIK, atau status (sudah/belum)..."
           />
         </div>
 
@@ -407,16 +406,18 @@
           <table>
             <thead>
               <tr>
-                <th>Timestamp</th>
-                <th>Nama</th>
+                <th>NIK</th>
+                <th>Nama Karyawan</th>
                 <th>Departemen</th>
+                <th>Status</th>
+                <th>Waktu Input</th>
               </tr>
             </thead>
             <tbody id="table">
               <tr>
-                <td colspan="3" class="loading">
+                <td colspan="5" class="loading">
                   <div class="spinner"></div>
-                  <div>Memuat data...</div>
+                  <div>Memuat data Karawang...</div>
                 </td>
               </tr>
             </tbody>
@@ -426,57 +427,37 @@
     </div>
   </main>
 
-  <!-- FOOTER - HIJAU TOSKA -->
+  <!-- FOOTER -->
   <footer class="footer">
-    <div class="footer-time" id="clock">
-      <!-- Waktu akan di-inject di sini -->
-    </div>
-
+    <div class="footer-time" id="clock"></div>
     <div class="footer-brand">
       <div class="footer-brand-item">
-        <img src="/assets/images/zinus-putih.webp" class="h-10" alt="Zinus Logo" />
-        <span>Zinus Global Indonesia - Karawang</span>
+        <!-- ✅ PATH RELATIF (PENTING) -->
+        <img src="../assets/images/zinus-putih.webp" class="h-10" alt="Zinus Logo" onerror="this.style.display='none'" />
+        <span>Zinus Global Indonesia</span>
       </div>
-      <img src="/assets/images/hyundai-ori-hitam.png" class="h-10" alt="Hyundai Logo" />
+      <!-- ✅ PATH RELATIF (PENTING) -->
+      <img src="../assets/images/hyundai-ori-hitam.png" class="h-10" alt="Hyundai Logo" onerror="this.style.display='none'" />
     </div>
   </footer>
 
   <!-- SCRIPT -->
-  <script src="/assets/js/sheets.js"></script>
+  <!-- ✅ PATH RELATIF KE JS UTAMA (PENTING) -->
+  <script src="../assets/js/sheets.js"></script>
   <script>
-    // Detect factory from sheets.js
-    let currentFactory = 'karawang';
-    if (typeof window.getCurrentFactory === 'function') {
-      currentFactory = window.getCurrentFactory();
-      console.log(`🏭 Detected Factory: ${currentFactory.toUpperCase()}`);
-    }
-
-    // Update factory badge and footer
-    const factoryBadge = document.querySelector('.factory-badge');
-    const footerFactorySpan = document.querySelector('.footer-brand-item span');
-    const pageTitle = document.querySelector('title');
-    
-    if (factoryBadge) {
-      factoryBadge.innerHTML = `🏭 ${currentFactory.charAt(0).toUpperCase() + currentFactory.slice(1)}`;
-    }
-    
-    if (footerFactorySpan) {
-      footerFactorySpan.textContent = `Zinus Global Indonesia - ${currentFactory.charAt(0).toUpperCase() + currentFactory.slice(1)}`;
-    }
-    
-    if (pageTitle) {
-      pageTitle.textContent = `Detail Evaluasi Training 1 | ${currentFactory.charAt(0).toUpperCase() + currentFactory.slice(1)}`;
-    }
+    console.log('📊 Starting detail-evaluasi1.html script (KARAWANG VERSION)...');
 
     const params = new URLSearchParams(window.location.search);
     const dept = params.get('dept');
 
-    // Set title
-    document.getElementById('title').innerText = `Detail Evaluasi 1 - ${dept || 'Semua Departemen'}`;
+    // Set title dengan info factory
+    const factory = window.getCurrentFactory ? window.getCurrentFactory() : 'karawang';
+    document.getElementById('title').innerText = `Detail Evaluasi 1 - ${dept || 'Semua Departemen'} (${factory.toUpperCase()})`;
 
     let rawData = [];
     let filteredData = [];
 
+    // Render Table
     function renderTable(data) {
       const table = document.getElementById('table');
       table.innerHTML = '';
@@ -484,33 +465,49 @@
       if (data.length === 0) {
         table.innerHTML = `
           <tr>
-            <td colspan="3" style="text-align: center; padding: 2.5rem; color: #6b7280;">
-              <div style="font-size: 16px; font-weight: 600;">
-                Tidak ada data
-              </div>
+            <td colspan="5" style="text-align: center; padding: 2.5rem; color: #6b7280;">
+              <div style="font-size: 16px; font-weight: 600;">Tidak ada data</div>
             </td>
           </tr>
         `;
         return;
       }
 
+      // Sort: Belum mengisi dulu (di atas), lalu sudah mengisi
+      data.sort((a, b) => {
+        if (a.status === b.status) return a.nama.localeCompare(b.nama);
+        return a.status === 'pending' ? -1 : 1;
+      });
+
       data.forEach(d => {
         const row = document.createElement('tr');
+        const isDone = d.status === 'done';
+        
         row.innerHTML = `
-          <td>${d.timestamp || '-'}</td>
+          <td style="font-weight:700;">${d.nik || '-'}</td>
           <td>${escapeHtml(d.nama || '-')}</td>
           <td>${escapeHtml(d.departemen || '-')}</td>
+          <td>
+            <span class="status-badge ${isDone ? 'status-done' : 'status-pending'}">
+              ${isDone ? '✓' : '✗'} ${isDone ? 'Sudah' : 'Belum'}
+            </span>
+          </td>
+          <td style="font-size:12px; color:#6b7280;">
+            ${isDone ? d.waktu : '-'}
+          </td>
         `;
         table.appendChild(row);
       });
     }
 
-    // Export to Excel
+    // Export to Excel (TANPA NILAI)
     function exportToExcel() {
       const exportData = filteredData.map(item => ({
-        Timestamp: item.timestamp || '-',
+        NIK: item.nik || '-',
         Nama: item.nama || '-',
-        Departemen: item.departemen || '-'
+        Departemen: item.departemen || '-',
+        Status: item.status === 'done' ? 'Sudah' : 'Belum',
+        Waktu: item.waktu || '-'
       }));
 
       if (exportData.length === 0) {
@@ -518,74 +515,68 @@
         return;
       }
 
-      // Use factory-aware export function
-      if (typeof window.exportToCSV === 'function') {
-        window.exportToCSV(
-          `${currentFactory}_detail_evaluasi1_${dept || 'semua'}_${new Date().toISOString().slice(0, 10)}.csv`,
-          exportData
-        );
-      } else {
-        // Fallback
-        const csvContent = "data:text/csv;charset=utf-8," 
-          + exportData.map(e => Object.values(e).join(",")).join("\n");
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `${currentFactory}_detail_evaluasi1_${dept || 'semua'}_${new Date().toISOString().slice(0, 10)}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
+      const headers = Object.keys(exportData[0]).join(',');
+      const rows = exportData.map(row => 
+        Object.values(row).map(val => `"${String(val).replace(/"/g, '""')}"`).join(',')
+      );
+      const csv = [headers, ...rows].join('\n');
+      
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `detail_evaluasi1_${factory}_${dept || 'semua'}_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
-    // Wait for sheets.js functions
+    // Wait for sheets.js to load
     function waitForSheets(timeout = 5000) {
       return new Promise((resolve, reject) => {
         const start = Date.now();
         const iv = setInterval(() => {
-          if (typeof window.fetchSheet === 'function' && 
-              typeof window.uniqueByName === 'function') {
+          if (typeof window.getDepartmentDetail === 'function') {
             clearInterval(iv);
             resolve();
           } else if (Date.now() - start > timeout) {
             clearInterval(iv);
-            reject(new Error('sheets.js functions not available in time'));
+            reject(new Error('sheets.js functions not available'));
           }
         }, 100);
       });
     }
 
-    // Fetch data
-    waitForSheets(5000)
-      .then(() => window.fetchSheet('evaluasi1'))
-      .then(data => {
-        console.log('✅ Data mentah:', data.length, 'baris');
+    // Fetch Data using getDepartmentDetail from sheets.js
+    waitForSheets()
+      .then(() => {
+        // Konfirmasi factory
+        const currentFactory = window.getCurrentFactory();
+        console.log(`🏭 Factory: ${currentFactory.toUpperCase()}`);
+        console.log(`📂 Department: ${dept || 'Semua'}`);
 
-        // Filter berdasarkan departemen
-        let filteredByDept = data;
-        if (dept) {
-          filteredByDept = data.filter(d => d.departemen === dept);
-          console.log(`✅ Filter departemen "${dept}":`, filteredByDept.length, 'baris');
-        }
+        return window.getDepartmentDetail(dept);
+      })
+      .then(allData => {
+        console.log('✅ Total karyawan:', allData.length);
+        
+        const doneCount = allData.filter(d => d.status === 'done').length;
+        const pendingCount = allData.filter(d => d.status === 'pending').length;
+        
+        console.log(`✅ Sudah: ${doneCount}, Belum: ${pendingCount}`);
 
-        // Hapus duplikat nama
-        rawData = window.uniqueByName(filteredByDept);
-        console.log('✅ Setelah filter duplikat:', rawData.length, 'baris unik');
-
+        rawData = allData;
         filteredData = [...rawData];
         renderTable(filteredData);
       })
       .catch(error => {
-        console.error('❌ Error loading ', error);
+        console.error('❌ Error loading data:', error);
         document.getElementById('table').innerHTML = `
           <tr>
-            <td colspan="3" style="text-align: center; padding: 2.5rem; color: #dc2626;">
-              <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">
-                Gagal Memuat Data
-              </div>
-              <div style="font-size: 14px; color: #6b7280;">
-                Silakan coba lagi nanti atau hubungi administrator
-              </div>
+            <td colspan="5" style="text-align: center; padding: 2.5rem; color: #dc2626;">
+              <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Gagal Memuat Data</div>
+              <div style="font-size: 14px; color: #6b7280;">${error.message}</div>
             </td>
           </tr>
         `;
@@ -596,9 +587,11 @@
       const keyword = e.target.value.toLowerCase().trim();
 
       filteredData = rawData.filter(d => 
+        (d.nik && d.nik.toLowerCase().includes(keyword)) ||
         (d.nama && d.nama.toLowerCase().includes(keyword)) ||
-        (d.timestamp && d.timestamp.toLowerCase().includes(keyword)) ||
-        (d.departemen && d.departemen.toLowerCase().includes(keyword))
+        (d.departemen && d.departemen.toLowerCase().includes(keyword)) ||
+        (d.status === 'done' && ('sudah'.includes(keyword))) ||
+        (d.status === 'pending' && ('belum'.includes(keyword)))
       );
 
       renderTable(filteredData);
@@ -618,19 +611,16 @@
     // CLOCK
     function updateClock() {
       const now = new Date();
-      
       const dateStr = now.toLocaleDateString("id-ID", {
         day: "2-digit",
         month: "long",
         year: "numeric",
       });
-      
       const timeStr = now.toLocaleTimeString("id-ID", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
       }) + " WIB";
-      
       document.getElementById("clock").innerHTML = `
         <div class="date">${dateStr}</div>
         <div class="time">${timeStr}</div>
